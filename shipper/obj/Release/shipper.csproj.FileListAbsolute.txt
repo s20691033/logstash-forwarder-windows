@@ -1,0 +1,14 @@
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Release\shipper.exe.config
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Release\shipper.exe
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Release\shipper.pdb
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Release\Ninject.dll
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Release\Ninject.Extensions.ContextPreservation.dll
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Release\StackExchange.Redis.dll
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Release\Topshelf.dll
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Release\Ninject.xml
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Release\Ninject.Extensions.ContextPreservation.xml
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Release\StackExchange.Redis.pdb
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Release\StackExchange.Redis.xml
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\obj\Release\shipper.exe
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\obj\Release\shipper.pdb
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\obj\Release\shipper.csprojResolveAssemblyReference.cache

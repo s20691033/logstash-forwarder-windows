@@ -1,0 +1,14 @@
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Debug\shipper.exe.config
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Debug\shipper.exe
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Debug\shipper.pdb
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Debug\Ninject.dll
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Debug\Topshelf.dll
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Debug\Ninject.xml
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\obj\Debug\shipper.exe
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\obj\Debug\shipper.pdb
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Debug\Ninject.Extensions.ContextPreservation.dll
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Debug\Ninject.Extensions.ContextPreservation.xml
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\obj\Debug\shipper.csprojResolveAssemblyReference.cache
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Debug\StackExchange.Redis.dll
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Debug\StackExchange.Redis.pdb
+D:\users\hao.tan\documents\visual studio 2012\Projects\shipper\shipper\bin\Debug\StackExchange.Redis.xml

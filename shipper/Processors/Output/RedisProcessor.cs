@@ -1,0 +1,81 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using StackExchange.Redis;
+
+namespace shipper.Processors.Output
+{
+    public class RedisProcessor : IOutputProcessor
+    {
+        private string _name;
+        private string _host;
+        private int _db;
+        private string _key;
+        private bool _status = false;
+        private ConnectionMultiplexer _redis;
+        private IDatabase _redisdb;
+
+        public void SetName(string name)
+        {
+            _name = name;
+        }
+        public string GetName()
+        {
+            return _name;
+        }
+
+
+        public void SetMetadata(string metadata)
+        {
+            
+            System.Console.WriteLine("redis!!!");
+            try
+            {
+                string[] md = metadata.Split('|');
+                if (md[0].Length > 0)
+                {
+                    _host = md[0];
+                }
+                if (md[1].Length > 0 )
+                {
+                    _db = Int32.Parse(md[1]);
+                }
+                if (md[2].Length > 0)
+                {
+                    _key = md[2];
+                }
+                _redis = ConnectionMultiplexer.Connect(_host);
+                _redisdb = _redis.GetDatabase(_db);
+                _status = true;
+            }
+            catch(Exception ex)
+            {
+                _status = false;
+            }
+        }
+
+
+        public void ProcessData(string data)
+        {
+            if (_status && data.Length > 0)
+            {
+                try
+                {
+                    if (!_redis.IsConnected)
+                    {
+                        _redis.Close();
+                        _redis = ConnectionMultiplexer.Connect(_host);
+                        _redisdb = _redis.GetDatabase(_db);
+                    }
+                    _redisdb.ListRightPush(_key, data);
+                }
+                catch (Exception ex)
+                {
+                    System.Console.WriteLine(ex.ToString());
+                }
+            }
+        }
+    }
+}
