@@ -71,6 +71,11 @@ namespace shipper.Processors.Output
                     }
                     _redisdb.ListRightPush(_key, data);
                 }
+                catch(System.TimeoutException ex)
+                {
+                    System.Console.WriteLine("timeout exception caught{0}",ex.ToString());
+                    _redis.Close();
+                }
                 catch (Exception ex)
                 {
                     System.Console.WriteLine(ex.ToString());
