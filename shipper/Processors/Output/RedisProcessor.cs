@@ -69,7 +69,8 @@ namespace shipper.Processors.Output
                         _redis = ConnectionMultiplexer.Connect(_host);
                         _redisdb = _redis.GetDatabase(_db);
                     }
-                    _redisdb.ListRightPush(_key, data);
+                    var ret = _redisdb.ListRightPush(_key, data, CommandFlags.FireAndForget);
+                   // System.Console.WriteLine("returned {0}, {1}",ret,data);
                 }
                 catch(System.TimeoutException ex)
                 {
