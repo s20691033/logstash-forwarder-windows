@@ -23,7 +23,7 @@ namespace shipper.IoC
             Bind<Func<string, IOutputProcessor>>().ToMethod(ctx => x => ctx.ContextPreservingGet<IOutputProcessor>(x));
 
             Bind<IInputProcessor>().To<UdpProcessor>().Named("udp");
-            Bind<IOutputProcessor>().To<RedisProcessor>().Named("redis");
+            Bind<IOutputProcessor>().To<RedisProcessor>().InSingletonScope().Named("redis");
 
 
 
