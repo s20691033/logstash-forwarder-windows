@@ -53,24 +53,28 @@ namespace shipper.Processors.Output
             catch(Exception ex)
             {
                 _status = false;
+                System.Console.WriteLine(ex.ToString());
+                System.Environment.Exit(0); 
             }
         }
 
 
         public void ProcessData(string data)
         {
+            
             if (_status && data.Length > 0)
             {
                 try
                 {
                     if (!_redis.IsConnected)
                     {
+                        System.Console.WriteLine("connecting now...");
                         _redis.Close();
                         _redis = ConnectionMultiplexer.Connect(_host);
                         _redisdb = _redis.GetDatabase(_db);
                     }
                     var ret = _redisdb.ListRightPush(_key, data, When.Always, CommandFlags.FireAndForget);
-                   // System.Console.WriteLine("returned {0}, {1}",ret,data);
+                    //System.Console.WriteLine("returned {0}, {1}",ret,data);
                 }
                 catch(System.TimeoutException ex)
                 {
