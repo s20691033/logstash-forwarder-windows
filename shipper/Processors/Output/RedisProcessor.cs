@@ -26,6 +26,10 @@ namespace shipper.Processors.Output
             return _name;
         }
 
+        public RedisProcessor()
+        {
+            System.Console.WriteLine("constructor has been called!!!");
+        }
 
         public void SetMetadata(string metadata)
         {
@@ -69,7 +73,7 @@ namespace shipper.Processors.Output
                     if (!_redis.IsConnected)
                     {
                         System.Console.WriteLine("connecting now...");
-                        _redis.Close();
+                        _redis.Close(false);
                         _redis = ConnectionMultiplexer.Connect(_host);
                         _redisdb = _redis.GetDatabase(_db);
                     }
