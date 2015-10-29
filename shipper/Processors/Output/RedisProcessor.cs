@@ -70,6 +70,7 @@ namespace shipper.Processors.Output
             {
                 try
                 {
+                   
                     if (!_redis.IsConnected)
                     {
                         System.Console.WriteLine("reconnecting now...");
@@ -77,7 +78,8 @@ namespace shipper.Processors.Output
                         //_redis = ConnectionMultiplexer.Connect(_host);
                         //_redisdb = _redis.GetDatabase(_db);
                     }
-                    var ret = _redisdb.ListRightPush(_key, data, When.Always, CommandFlags.FireAndForget);
+                    //var ret = _redisdb.ListRightPush(_key, data, When.Always, CommandFlags.FireAndForget);
+                    var ret = _redisdb.ListRightPush(_key, data);
                     //System.Console.WriteLine("returned {0}, {1}",ret,data);
                 }
                 catch(System.TimeoutException ex)
