@@ -22,9 +22,15 @@ namespace shipper
                     s.WhenStopped(tc => tc.Stop());
                 });
                 x.RunAsLocalSystem();
-                x.SetDescription("test");
+                x.SetDescription("a logstash shipper");
                 x.SetDisplayName("shipper");
                 x.SetServiceName("shipper");
+                x.EnableServiceRecovery(rc => {
+                    rc.RestartService(5);
+                    rc.RestartService(5);
+                    rc.SetResetPeriod(1);
+
+                });
             });
         }
     }
