@@ -74,7 +74,7 @@ namespace shipper.Processors.Output
                     if (!_redis.IsConnected)
                     {
                         System.Console.WriteLine("reconnecting now...");
-                        _redis.Close(false);
+                        _redis.Dispose();
                         _redis = ConnectionMultiplexer.Connect(_host);
                         _redisdb = _redis.GetDatabase(_db);
                     }
