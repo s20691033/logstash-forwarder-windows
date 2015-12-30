@@ -55,6 +55,8 @@ namespace shipper.Processors.Output
                 {
                     return false;
                 }
+
+                _sender.Send(Encoding.ASCII.GetBytes("CLIENT SETNAME " + System.Environment.MachineName + "\r\n"));
                 return true;
             }
             catch (Exception ex)
@@ -106,16 +108,19 @@ namespace shipper.Processors.Output
                         System.Console.WriteLine("reconnecting now...");
                         this.init();
                     }
-                    _sender.Send(Encoding.ASCII.GetBytes("*3" + "\r\n"));
-                    _sender.Send(Encoding.ASCII.GetBytes("$5" + "\r\n"));
-                    _sender.Send(Encoding.ASCII.GetBytes("RPUSH" + "\r\n"));
-                    _sender.Send(Encoding.ASCII.GetBytes("$"+_key.Length + "\r\n"));
-                    _sender.Send(Encoding.ASCII.GetBytes(_key + "\r\n"));
-                    _sender.Send(Encoding.ASCII.GetBytes("$" + data.Length + "\r\n"));
-                    _sender.Send(Encoding.ASCII.GetBytes(data + "\r\n"));
-                    //System.Console.WriteLine("returned {0}",data);
-                    var bytesRec = _sender.Receive(_bytes);
-                    //System.Console.WriteLine(Encoding.ASCII.GetString(_bytes, 0, bytesRec));
+                    else
+                    {
+                        _sender.Send(Encoding.ASCII.GetBytes("*3" + "\r\n"));
+                        _sender.Send(Encoding.ASCII.GetBytes("$5" + "\r\n"));
+                        _sender.Send(Encoding.ASCII.GetBytes("RPUSH" + "\r\n"));
+                        _sender.Send(Encoding.ASCII.GetBytes("$" + _key.Length + "\r\n"));
+                        _sender.Send(Encoding.ASCII.GetBytes(_key + "\r\n"));
+                        _sender.Send(Encoding.ASCII.GetBytes("$" + data.Length + "\r\n"));
+                        _sender.Send(Encoding.ASCII.GetBytes(data + "\r\n"));
+                        //System.Console.WriteLine("returned {0}",data);
+                        var bytesRec = _sender.Receive(_bytes);
+                        //System.Console.WriteLine(Encoding.ASCII.GetString(_bytes, 0, bytesRec));
+                    }
                 }
                 catch (System.TimeoutException ex)
                 {
