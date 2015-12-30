@@ -24,6 +24,7 @@ namespace shipper.IoC
 
             Bind<IInputProcessor>().To<UdpProcessor>().Named("udp");
             Bind<IOutputProcessor>().To<RedisProcessor>().InSingletonScope().Named("redis");
+            Bind<IOutputProcessor>().To<TCPRedisProcessor>().InSingletonScope().Named("tcpredis");
 
 
 

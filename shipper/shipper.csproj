@@ -72,6 +72,7 @@
     <Compile Include="Processors\Input\UdpProcessor.cs" />
     <Compile Include="Processors\Output\IOutputProcessor.cs" />
     <Compile Include="Processors\Output\RedisProcessor.cs" />
+    <Compile Include="Processors\Output\TCPRedisProcessor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
