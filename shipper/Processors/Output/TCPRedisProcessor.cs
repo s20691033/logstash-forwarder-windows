@@ -21,8 +21,7 @@ namespace shipper.Processors.Output
         private bool _status = false;
         private byte[] _bytes = new byte[1024];
 
-        Socket _sender = new Socket(AddressFamily.InterNetwork,
-                SocketType.Stream, ProtocolType.Tcp);
+        private Socket _sender;
 
 
         public void SetName(string name)
@@ -40,6 +39,7 @@ namespace shipper.Processors.Output
             {
                 //_sender.Shutdown(SocketShutdown.Both);
                 //_sender.Close();
+                _sender = new Socket(AddressFamily.InterNetwork,SocketType.Stream, ProtocolType.Tcp);
                 _sender.Connect(_host, 6379);
                 _sender.Send(Encoding.ASCII.GetBytes("PING\r\n"));
 
