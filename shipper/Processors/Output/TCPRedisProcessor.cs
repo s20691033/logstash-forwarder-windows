@@ -19,7 +19,7 @@ namespace shipper.Processors.Output
         private int _db;
         private string _key;
         private bool _status = false;
-        private byte[] _bytes = new byte[10240];
+        private byte[] _bytes = new byte[1024];
 
         Socket _sender = new Socket(AddressFamily.InterNetwork,
                 SocketType.Stream, ProtocolType.Tcp);
@@ -41,14 +41,16 @@ namespace shipper.Processors.Output
                 //_sender.Shutdown(SocketShutdown.Both);
                 //_sender.Close();
                 _sender.Connect(_host, 6379);
-                _sender.Send(Encoding.ASCII.GetBytes("PING\n"));
+                _sender.Send(Encoding.ASCII.GetBytes("PING\r\n"));
+
                 var bytesRec=_sender.Receive(_bytes);
                 if (!Regex.IsMatch(Encoding.ASCII.GetString(_bytes, 0, bytesRec), @"PONG"))
                 {
                     return false;
                 }
 
-                _sender.Send(Encoding.ASCII.GetBytes("SELECT "+_db+"\n"));
+                _sender.Send(Encoding.ASCII.GetBytes("SELECT " + _db + "\r\n"));
+                bytesRec = _sender.Receive(_bytes);
                 if (!Regex.IsMatch(Encoding.ASCII.GetString(_bytes, 0, bytesRec), @"OK"))
                 {
                     return false;
@@ -99,17 +101,21 @@ namespace shipper.Processors.Output
             {
                 try
                 {
-
                     if (!_sender.Connected)
                     {
                         System.Console.WriteLine("reconnecting now...");
                         this.init();
                     }
-                    System.Console.WriteLine(data);
-                    //var ret = _redisdb.ListRightPush(_key, data, When.Always, CommandFlags.FireAndForget);
-                    //var ret = _redisdb.ListRightPush(_key, data);
-                    _sender.Send(Encoding.ASCII.GetBytes("LPUSH "+_key+ " \""+data+"\" "+"\n"));
-                    //System.Console.WriteLine("returned {0}, {1}",ret,data);
+                    _sender.Send(Encoding.ASCII.GetBytes("*3" + "\r\n"));
+                    _sender.Send(Encoding.ASCII.GetBytes("$5" + "\r\n"));
+                    _sender.Send(Encoding.ASCII.GetBytes("RPUSH" + "\r\n"));
+                    _sender.Send(Encoding.ASCII.GetBytes("$"+_key.Length + "\r\n"));
+                    _sender.Send(Encoding.ASCII.GetBytes(_key + "\r\n"));
+                    _sender.Send(Encoding.ASCII.GetBytes("$" + data.Length + "\r\n"));
+                    _sender.Send(Encoding.ASCII.GetBytes(data + "\r\n"));
+                    //System.Console.WriteLine("returned {0}",data);
+                    var bytesRec = _sender.Receive(_bytes);
+                    //System.Console.WriteLine(Encoding.ASCII.GetString(_bytes, 0, bytesRec));
                 }
                 catch (System.TimeoutException ex)
                 {

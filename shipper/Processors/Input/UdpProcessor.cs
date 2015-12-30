@@ -58,7 +58,10 @@ namespace shipper.Processors.Input
 
                         byte[] bytes = listener.Receive(ref groupEP);
                         //Console.WriteLine("Received broadcast from {0} :\n {1}\n",groupEP.ToString(),Encoding.ASCII.GetString(bytes, 0, bytes.Length));
-                        _datahub.ProcessData(Encoding.ASCII.GetString(bytes, 0, bytes.Length),_dest);
+                        lock (_datahub)
+                        {
+                            _datahub.ProcessData(Encoding.ASCII.GetString(bytes, 0, bytes.Length), _dest);
+                        }
                     }
                 }
                 catch (System.Net.Sockets.SocketException ex)
