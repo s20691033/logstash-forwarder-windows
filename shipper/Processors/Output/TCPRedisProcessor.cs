@@ -118,7 +118,7 @@ namespace shipper.Processors.Output
                         _sender.Send(Encoding.ASCII.GetBytes("$" + data.Length + "\r\n"));
                         _sender.Send(Encoding.ASCII.GetBytes(data + "\r\n"));
                         //System.Console.WriteLine("returned {0}",data);
-                        var bytesRec = _sender.Receive(_bytes);
+                       // var bytesRec = _sender.Receive(_bytes);
                         //System.Console.WriteLine(Encoding.ASCII.GetString(_bytes, 0, bytesRec));
                     }
                 }

@@ -30,6 +30,9 @@ namespace shipper.Processors.Input
         {
             _metadata = metadata;
             _dest = dest;
+            listener = new UdpClient(Int32.Parse(_metadata));
+            listener.Client.ReceiveBufferSize = Int32.MaxValue;
+            
         }
 
         public void Stop()
@@ -51,17 +54,16 @@ namespace shipper.Processors.Input
             (new Thread(() => {
                 try
                 {
-                    listener = new UdpClient(Int32.Parse(_metadata));
-                    IPEndPoint groupEP = new IPEndPoint(IPAddress.Any, 0);
+                    IPEndPoint groupEP = new IPEndPoint(IPAddress.Any, Int32.Parse(_metadata));
                     while (!_done)
                     {
-
+                        
                         byte[] bytes = listener.Receive(ref groupEP);
                         //Console.WriteLine("Received broadcast from {0} :\n {1}\n",groupEP.ToString(),Encoding.ASCII.GetString(bytes, 0, bytes.Length));
-                        lock (_datahub)
-                        {
+                        //lock (_datahub)
+                        //{
                             _datahub.ProcessData(Encoding.ASCII.GetString(bytes, 0, bytes.Length), _dest);
-                        }
+                        //}
                     }
                 }
                 catch (System.Net.Sockets.SocketException ex)
