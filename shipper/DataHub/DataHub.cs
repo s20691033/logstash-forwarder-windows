@@ -13,9 +13,16 @@ namespace shipper.DataHub
     {
         private List<IOutputProcessor> _outputprocessors = new List<IOutputProcessor>();
         private readonly Func<string, IOutputProcessor> _outputprocessor;
+        private readonly bool _debug = false;
 
-        public DataHub(Func<string, IOutputProcessor> outputprocessor)
+        public DataHub(Func<string, IOutputProcessor> outputprocessor,string debug)
         {
+            if (debug.ToUpper().Equals("TRUE"))
+            {
+                _debug = true;
+            }
+
+            
             _outputprocessor = outputprocessor;
             var config = ConfigurationManager.GetSection("Processors");
             if (config != null)
@@ -32,6 +39,12 @@ namespace shipper.DataHub
 
         public void ProcessData(string data,string dest)
         {
+            if (_debug)
+            {
+                System.Console.WriteLine("received-from-datahub {0}", data);
+            }
+
+
             foreach (IOutputProcessor op in _outputprocessors)
             {
                 if (op.GetName().Equals(dest))

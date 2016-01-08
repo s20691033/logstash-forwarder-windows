@@ -20,19 +20,22 @@ namespace shipper.Processors.Input
         private UdpClient listener;
 
 
-        public UdpProcessor(IDataHub datahub)
+        private readonly bool _debug = false;
+
+        public UdpProcessor(IDataHub datahub, string debug)
         {
             _datahub = datahub;
             _done = false;
+            if (debug.ToUpper().Equals("TRUE"))
+            {
+                _debug = true;
+            }
         }
 
         public void SetMetadata(string metadata,string dest)
         {
             _metadata = metadata;
             _dest = dest;
-            listener = new UdpClient(Int32.Parse(_metadata));
-            listener.Client.ReceiveBufferSize = Int32.MaxValue;
-            
         }
 
         public void Stop()
@@ -54,16 +57,22 @@ namespace shipper.Processors.Input
             (new Thread(() => {
                 try
                 {
+                    listener = new UdpClient(Int32.Parse(_metadata));
+                    listener.Client.ReceiveBufferSize = Int32.MaxValue;
                     IPEndPoint groupEP = new IPEndPoint(IPAddress.Any, Int32.Parse(_metadata));
                     while (!_done)
                     {
                         
                         byte[] bytes = listener.Receive(ref groupEP);
                         //Console.WriteLine("Received broadcast from {0} :\n {1}\n",groupEP.ToString(),Encoding.ASCII.GetString(bytes, 0, bytes.Length));
-                        //lock (_datahub)
-                        //{
+                        lock (_datahub)
+                        {
                             _datahub.ProcessData(Encoding.ASCII.GetString(bytes, 0, bytes.Length), _dest);
-                        //}
+                            if (_debug)
+                            {
+                                System.Console.WriteLine("received-from-udp {0}", Encoding.ASCII.GetString(bytes, 0, bytes.Length));
+                            }
+                        }
                     }
                 }
                 catch (System.Net.Sockets.SocketException ex)

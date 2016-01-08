@@ -21,6 +21,8 @@ namespace shipper.Processors.Output
         private bool _status = false;
         private byte[] _bytes = new byte[1024];
 
+        private readonly bool _debug = false;
+
         private Socket _sender;
 
 
@@ -110,13 +112,27 @@ namespace shipper.Processors.Output
                     }
                     else
                     {
-                        _sender.Send(Encoding.ASCII.GetBytes("*3" + "\r\n"));
-                        _sender.Send(Encoding.ASCII.GetBytes("$5" + "\r\n"));
-                        _sender.Send(Encoding.ASCII.GetBytes("RPUSH" + "\r\n"));
-                        _sender.Send(Encoding.ASCII.GetBytes("$" + _key.Length + "\r\n"));
-                        _sender.Send(Encoding.ASCII.GetBytes(_key + "\r\n"));
-                        _sender.Send(Encoding.ASCII.GetBytes("$" + data.Length + "\r\n"));
-                        _sender.Send(Encoding.ASCII.GetBytes(data + "\r\n"));
+
+                        if (_debug)
+                        {
+                            System.Console.WriteLine("received-from-tcpredis {0}", data);
+                        }
+
+
+                        _sender.Send(Encoding.ASCII.GetBytes("*3" + "\r\n"
+                        +"$5" + "\r\n"
+                        + "RPUSH" + "\r\n"
+                        +"$" + _key.Length + "\r\n"
+                        + _key + "\r\n"
+                        + "$" + data.Length + "\r\n"
+                        + data + "\r\n"
+                        ));
+                        //_sender.Send(Encoding.ASCII.GetBytes("$5" + "\r\n"));
+                     //   _sender.Send(Encoding.ASCII.GetBytes("RPUSH" + "\r\n"));
+                     //   _sender.Send(Encoding.ASCII.GetBytes("$" + _key.Length + "\r\n"));
+                    //    _sender.Send(Encoding.ASCII.GetBytes(_key + "\r\n"));
+                    //    _sender.Send(Encoding.ASCII.GetBytes("$" + data.Length + "\r\n"));
+                    //    _sender.Send(Encoding.ASCII.GetBytes(data + "\r\n"));
                         //System.Console.WriteLine("returned {0}",data);
                        // var bytesRec = _sender.Receive(_bytes);
                         //System.Console.WriteLine(Encoding.ASCII.GetString(_bytes, 0, bytesRec));
@@ -134,9 +150,13 @@ namespace shipper.Processors.Output
             }
         }
 
-        public TCPRedisProcessor()
+        public TCPRedisProcessor(string debug)
         {
             System.Console.WriteLine("tcpredis!!!");
+            if (debug.ToUpper().Equals("TRUE"))
+            {
+                _debug = true;
+            }
 
         }
     }
