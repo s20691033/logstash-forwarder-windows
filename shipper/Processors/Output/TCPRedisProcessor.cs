@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 
 
 namespace shipper.Processors.Output
@@ -24,7 +25,8 @@ namespace shipper.Processors.Output
         private readonly bool _debug = false;
 
         private Socket _sender;
-
+        private static ManualResetEvent receiveDone =
+        new ManualResetEvent(false);
 
         public void SetName(string name)
         {
@@ -37,6 +39,7 @@ namespace shipper.Processors.Output
 
         private bool init()
         {
+            System.Console.WriteLine("im connecting to redis now  {0}",DateTime.Now);
             try
             {
                 //_sender.Shutdown(SocketShutdown.Both);
@@ -127,16 +130,11 @@ namespace shipper.Processors.Output
                         + "$" + data.Length + "\r\n"
                         + data + "\r\n"
                         ));
-                        //_sender.Send(Encoding.ASCII.GetBytes("$5" + "\r\n"));
-                     //   _sender.Send(Encoding.ASCII.GetBytes("RPUSH" + "\r\n"));
-                     //   _sender.Send(Encoding.ASCII.GetBytes("$" + _key.Length + "\r\n"));
-                    //    _sender.Send(Encoding.ASCII.GetBytes(_key + "\r\n"));
-                    //    _sender.Send(Encoding.ASCII.GetBytes("$" + data.Length + "\r\n"));
-                    //    _sender.Send(Encoding.ASCII.GetBytes(data + "\r\n"));
-                        //System.Console.WriteLine("returned {0}",data);
-                       // var bytesRec = _sender.Receive(_bytes);
+                        
+                        _sender.Receive(_bytes);
+
                         //System.Console.WriteLine(Encoding.ASCII.GetString(_bytes, 0, bytesRec));
-                    }
+                    }  
                 }
                 catch (System.TimeoutException ex)
                 {
@@ -158,6 +156,58 @@ namespace shipper.Processors.Output
                 _debug = true;
             }
 
+        }
+
+
+        private static void Receive(Socket client)
+        {
+            try
+            {
+                // Create the state object.
+                StateObject state = new StateObject();
+                state.workSocket = client;
+
+                // Begin receiving the data from the remote device.
+                client.BeginReceive(state.buffer, 0, StateObject.BufferSize, 0,
+                    new AsyncCallback(ReceiveCallback), state);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        private static void ReceiveCallback(IAsyncResult ar)
+        {
+            try
+            {
+                // Retrieve the state object and the client socket 
+                // from the asynchronous state object.
+                StateObject state = (StateObject)ar.AsyncState;
+                Socket client = state.workSocket;
+
+                // Read data from the remote device.
+                int bytesRead = client.EndReceive(ar);
+                receiveDone.Set();
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+        }
+
+        public class StateObject
+        {
+            // Client socket.
+            public Socket workSocket = null;
+            // Size of receive buffer.
+            public const int BufferSize = 256;
+            // Receive buffer.
+            public byte[] buffer = new byte[BufferSize];
+            // Received data string.
+            public StringBuilder sb = new StringBuilder();
         }
     }
 }
